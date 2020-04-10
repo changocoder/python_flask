@@ -1,0 +1,1 @@
+docker run -it -p 5000:5000 -w /home/api -v %cd%:/home/api python:3.8.2-slim-buster /bin/bash
