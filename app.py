@@ -62,4 +62,22 @@ def get_book_by_isbn(isbn):
 
     return jsonify(return_value)
 
-app.run(port=5000,host="0.0.0.0")
+@app.route("/books/<int:isbn>", methods=['PUT'])
+def replace_book(isbn):
+    request_data = request.get_json()
+    new_item = {
+            'name': request_data['name'],
+            'price': request_data['price'],
+            'isbn': isbn
+    }
+    i = 0
+    for book in books:
+        currentItem = book['isbn']
+        if  currentItem == isbn:
+            books[i] = new_item
+        i=+1
+    response = Response("", status= 204)
+    return response
+
+
+app.run(port=5000, host="0.0.0.0")
