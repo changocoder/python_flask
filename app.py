@@ -19,6 +19,12 @@ def validBookObject(bookObject):
     else:
         return False
 
+def valid_put_request_data(request_data):
+    if("name" in request_data and "price" in request_data):
+        return True
+    else:
+        return False
+
 @app.route("/")
 def hello_world():
     return 'Hello World'
@@ -72,12 +78,27 @@ def replace_book(isbn):
     }
     i = 0
     for book in books:
-        currentItem = book['isbn']
-        if  currentItem == isbn:
+        
+        if  book['isbn'] == isbn:
             books[i] = new_item
         i=+1
     response = Response("", status= 204)
     return response
 
+@app.route("/books/<int:isbn>", methods=["PATCH"])
+def update_book(isbn):
+    request_data = request.get_json();
+    update_book = {}
+    if("name" in request_data):
+        update_book["name"] = request_data["name"]
+    if("price" in request_data):
+        update_book["price"] = request_data["price"]    
+    for book in books:
+        if book["isbn"] == isbn:
+            book.update(update_book)
+    response = Response("",status=204)
+    response.headers["Location"] = "/books/" + str(isbn)
+    return response    
 
+    
 app.run(port=5000, host="0.0.0.0")
